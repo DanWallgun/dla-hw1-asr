@@ -7,6 +7,7 @@ import torch
 from tqdm import tqdm
 
 import hw_asr.model as module_model
+from hw_asr.metric.utils import calc_cer, calc_wer
 from hw_asr.trainer import Trainer
 from hw_asr.utils import ROOT_PATH
 from hw_asr.utils.object_loading import get_dataloaders
@@ -43,6 +44,7 @@ def main(config, out_file):
     model.eval()
 
     results = []
+    cers, wers = [], []
 
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
@@ -63,13 +65,19 @@ def main(config, out_file):
                 argmax = argmax[: int(batch["log_probs_length"][i])]
                 results.append(
                     {
-                        "ground_trurh": batch["text"][i],
+                        "ground_truth": batch["text"][i],
                         "pred_text_argmax": text_encoder.ctc_decode(argmax.cpu().numpy()),
                         "pred_text_beam_search": text_encoder.ctc_beam_search(
                             batch["probs"][i], batch["log_probs_length"][i], beam_size=100
                         )[:10],
                     }
                 )
+                wers.append(calc_wer(results[-1]['ground_truth'], results[-1]['pred_text_beam_search'][0].text))
+                cers.append(calc_cer(results[-1]['ground_truth'], results[-1]['pred_text_beam_search'][0].text))
+
+    print(f'WER (beam) = {sum(wers) / len(wers)}')
+    print(f'CER (beam) = {sum(cers) / len(cers)}')
+
     with Path(out_file).open("w") as f:
         json.dump(results, f, indent=2)
 
