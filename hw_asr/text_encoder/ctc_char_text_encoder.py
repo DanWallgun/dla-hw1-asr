@@ -68,12 +68,12 @@ class ExternalCTCCharTextEncoder(CTCCharTextEncoder):
 
     EMPTY_TOK = "^"
 
-    def __init__(self, alphabet: List[str] = None):
+    def __init__(self, alphabet: List[str] = None, lm_file: str = None):
         super().__init__(alphabet)
         vocab = [self.EMPTY_TOK] + list(self.alphabet)
         self.ind2char = dict(enumerate(vocab))
         self.char2ind = {v: k for k, v in self.ind2char.items()}
-        self.decoder = build_ctcdecoder([''] + list(self.alphabet))
+        self.decoder = build_ctcdecoder([''] + list(self.alphabet), kenlm_model_path=lm_file)
 
     def ctc_decode(self, inds: List[int]) -> str:
         # [DONE] TODO: your code here

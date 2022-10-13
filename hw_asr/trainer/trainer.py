@@ -53,7 +53,10 @@ class Trainer(BaseTrainer):
         self.log_step = 50
 
         self.train_metrics = MetricTracker(
-            "loss", "grad norm", *[m.name for m in self.metrics], writer=self.writer
+            "loss", "grad norm",
+            *[m.name for m in self.metrics],
+            # *[f'{name}.grad.norm' for name, _ in model.named_parameters()], 
+            writer=self.writer
         )
         self.evaluation_metrics = MetricTracker(
             "loss", *[m.name for m in self.metrics], writer=self.writer
@@ -104,6 +107,8 @@ class Trainer(BaseTrainer):
                 else:
                     raise e
             self.train_metrics.update("grad norm", self.get_grad_norm())
+            # for name, p in self.model.named_parameters():
+            #     self.train_metrics.update(f'{name}.grad.norm', torch.norm(p.grad.detach(), 2).cpu())
             if batch_idx % self.log_step == 0:
                 self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
                 self.logger.debug(

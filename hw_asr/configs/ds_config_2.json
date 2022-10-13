@@ -1,47 +1,25 @@
 {
-  "name": "deepspeech_clean_bpe",
-  "n_gpu": 1,
-  "preprocessing": {
-    "sr": 16000,
-    "spectrogram": {
-      "type": "MelSpectrogram",
-      "args": {}
-    },
-    "log_spec": true
-  },
-  "text_encoder": {
-    "type": "ExternalCTCBPETextEncoder",
-    "args": {
-      "model_file": "external/en.wiki.bpe.vs1000.model"
-    }
-  },
   "augmentations": {
     "wave": [],
     "spectrogram": [
       {
         "type": "TimeMasking",
         "args": {
-          "time_mask_param": 128,
+          "time_mask_param": 200,
           "p": 0.3
         }
       },
       {
         "type": "FrequencyMasking",
         "args": {
-          "freq_mask_param": 32
+          "freq_mask_param": 50
         }
       }
     ]
   },
-  "arch": {
-    "type": "KindaDeepSpeechModel",
-    "args": {
-      "n_feats": 128
-    }
-  },
   "data": {
     "train": {
-      "batch_size": 128,
+      "batch_size": 256,
       "num_workers": 8,
       "datasets": [
         {
@@ -71,7 +49,7 @@
       ]
     },
     "val": {
-      "batch_size": 128,
+      "batch_size": 256,
       "num_workers": 8,
       "datasets": [
         {
@@ -83,7 +61,7 @@
       ]
     },
     "test-clean": {
-      "batch_size": 128,
+      "batch_size": 256,
       "num_workers": 8,
       "datasets": [
         {
@@ -98,39 +76,21 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 3e-4
+      "lr": 1e-4
     }
   },
-  "loss": {
-    "type": "CTCLoss",
-    "args": {}
-  },
-  "metrics": [
-    {
-      "type": "ArgmaxWERMetric",
-      "args": {
-        "name": "WER (argmax)"
-      }
-    },
-    {
-      "type": "ArgmaxCERMetric",
-      "args": {
-        "name": "CER (argmax)"
-      }
-    }
-  ],
   "lr_scheduler": {
     "type": "OneCycleLR",
     "args": {
       "steps_per_epoch": 100,
-      "epochs": 50,
+      "epochs": 100,
       "anneal_strategy": "cos",
-      "max_lr": 3e-4,
+      "max_lr": 1e-4,
       "pct_start": 0.2
     }
   },
   "trainer": {
-    "epochs": 50,
+    "epochs": 100,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,

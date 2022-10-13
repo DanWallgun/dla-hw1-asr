@@ -1,9 +1,12 @@
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Union
 
+import numpy as np
 import torch
+import sentencepiece as spm
+from torch import Tensor
 from pyctcdecode import build_ctcdecoder
 
-from .bpe_text_encoder import BPETextEncoder
+from hw_asr.base.base_text_encoder import BaseTextEncoder
 
 
 class Hypothesis(NamedTuple):
@@ -11,11 +14,12 @@ class Hypothesis(NamedTuple):
     prob: float
 
 
-class ExternalCTCBPETextEncoder(BPETextEncoder):
+class ExternalCTCBPETextEncoder(BaseTextEncoder):
     EMPTY_TOK = "^"
 
-    def __init__(self, model_file):
-        super().__init__(model_file)
+    def __init__(self, model_file, lm_file: str = None):
+        self.sp = spm.SentencePieceProcessor(model_file=model_file)
+        self.vocab = self.sp.IdToPiece(list(range(self.sp.GetPieceSize())))
         self.decoder = build_ctcdecoder([''] + self.vocab)
     
     def __len__(self):
@@ -23,18 +27,29 @@ class ExternalCTCBPETextEncoder(BPETextEncoder):
 
     def __getitem__(self, item: int):
         assert type(item) is int
-        if item == len(self.vocab):
+        if item == 0:
             return self.EMPTY_TOK
-        else:
-            return self.sp.Decode(item)
+        return self.sp.DecodeIds(item - 1)
+    
+    def encode(self, text) -> Tensor:
+        text = self.normalize_text(text)
+        try:
+            return Tensor(self.sp.EncodeAsIds(text, enable_sampling=True, nbest_size=-1, alpha=0.1)).unsqueeze(0) + 1
+        except KeyError as e:
+            raise Exception(
+                f"Can't encode text '{text}''")
+
+    def decode(self, vector: Union[Tensor, np.ndarray, List[int]]):
+        """raw decode into bpe tokens"""
+        return ''.join([self[int(ind)] for ind in vector]).strip()
     
     def ctc_decode(self, inds: List[int]) -> str:
         compressed = [inds[0]]
         for ind in inds[1:]:
             if compressed[-1] != ind:
                 compressed.append(ind)
-        empty_tok_ind = self.sp.vocab_size
-        return super().decode([ind for ind in compressed if ind != empty_tok_ind])
+        empty_tok_ind = 0
+        return self.sp.DecodeIds([int(ind) - 1 for ind in compressed if ind != empty_tok_ind])
 
     def ctc_beam_search(self, probs: torch.tensor, probs_length,
                         beam_size: int = 100) -> List[Hypothesis]:
