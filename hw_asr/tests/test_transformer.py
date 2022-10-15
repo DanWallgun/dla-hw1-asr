@@ -1,7 +1,5 @@
 import unittest
 
-from tqdm import tqdm
-
 from hw_asr.collate_fn.collate import collate_fn
 from hw_asr.datasets import LibrispeechDataset
 from hw_asr.tests.utils import clear_log_folder_after_use
@@ -12,7 +10,7 @@ import hw_asr.model as module_arch
 class TestModel(unittest.TestCase):
     def test_deepspeech(self):
         config_parser = ConfigParser.get_test_configs()
-        config_parser["arch"]["type"] = "KindaDeepSpeechModel"
+        config_parser["arch"]["type"] = "VGGTransformerModel"
         with clear_log_folder_after_use(config_parser):
             ds = LibrispeechDataset(
                 "dev-clean", text_encoder=config_parser.get_text_encoder(),
@@ -24,4 +22,3 @@ class TestModel(unittest.TestCase):
 
             model = config_parser.init_obj(config_parser["arch"], module_arch, n_class=len(config_parser.get_text_encoder()))
             x = model(**batch)
-            

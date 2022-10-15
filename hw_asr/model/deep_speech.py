@@ -4,16 +4,16 @@ from torch import nn
 from hw_asr.base import BaseModel
 
 
-class MaskedConv2d(nn.Conv2d):
-    @staticmethod
-    def length_narrow(length, kernel_size, stride, padding, dilation=1):
-        """According to https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html"""
-        # return (length + 2 * padding - dilation * (kernel_size - 1) - 1 + stride) // stride
-        return torch.div(
-            length + 2 * padding - dilation * (kernel_size - 1) - 1 + stride, 
-            stride, rounding_mode='trunc'
-        )
+def length_narrow(length, kernel_size, stride, padding, dilation=1):
+    """According to https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html"""
+    # return (length + 2 * padding - dilation * (kernel_size - 1) - 1 + stride) // stride
+    return torch.div(
+        length + 2 * padding - dilation * (kernel_size - 1) - 1 + stride, 
+        stride, rounding_mode='trunc'
+    )
 
+
+class MaskedConv2d(nn.Conv2d):
     def forward(self, x, lengths):
         """
         x: Batch x Channel x Feature x Sequence
@@ -23,7 +23,7 @@ class MaskedConv2d(nn.Conv2d):
         assert x.size(0) == lengths.size(0), f'{x.size()=} {lengths.size()=}'
 
         x = super().forward(x)
-        lengths = MaskedConv2d.length_narrow(lengths, self.kernel_size[1], self.stride[1], self.padding[1])
+        lengths = length_narrow(lengths, self.kernel_size[1], self.stride[1], self.padding[1])
         # max_length = lengths.max()
         # padding_mask = (torch.arange(max_length, device=lengths.device).expand(lengths.size(0), max_length) >= lengths.unsqueeze(1)).unsqueeze(1).unsqueeze(1)
         padding_mask = torch.zeros_like(x, dtype=torch.bool)
@@ -49,7 +49,7 @@ class ConvEncoder(nn.Module):
     def get_output_size(self, input_size, dim=0):
         for layer in self.layers:
             if isinstance(layer, MaskedConv2d):
-                input_size = MaskedConv2d.length_narrow(
+                input_size = length_narrow(
                     input_size,
                     layer.kernel_size[dim],
                     layer.stride[dim],
