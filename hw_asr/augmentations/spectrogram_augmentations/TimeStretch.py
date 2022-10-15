@@ -1,14 +1,17 @@
 import torchaudio.transforms
-from torch import Tensor, rand
+from torch import Tensor
+from numpy.random import uniform
 
 from hw_asr.augmentations.base import AugmentationBase
 
 
 class TimeStretch(AugmentationBase):
     def __init__(self, rate, *args, **kwargs):
-        self.rate_sampler = (lambda: rate) if isinstance(rate, float) else (lambda: rand(1) * (rate[1] - rate[0]) + rate[0])
+        self.rate_sampler = (lambda: rate) if isinstance(rate, float) else (lambda: uniform(*rate))
         self._aug = torchaudio.transforms.TimeStretch(*args, **kwargs)
 
     def __call__(self, data: Tensor):
+        dtype = data.dtype
+        rate = self.rate_sampler()
         x = data.unsqueeze(1)
-        return self._aug(x, self.rate_sampler).squeeze(1)
+        return self._aug(x, rate).squeeze(1).type(dtype)

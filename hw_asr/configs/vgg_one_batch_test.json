@@ -28,7 +28,9 @@
       {
         "type": "TimeStretch",
         "args": {
-          "rate": [0.7, 1.3]
+          "n_freq": 80,
+          "hop_length": 160,
+          "rate": [0.7, 1.05]
         }
       },
       {
