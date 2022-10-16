@@ -5,6 +5,7 @@ conda create -y -n "$conda_env_name" python=3.9
 conda activate "$conda_env_name"
 conda info | grep "active environment"
 
+conda install -y -c conda-forge libsndfile
 pip install --index-url=https://pypi.python.org/simple -r requirements.txt
 pip install https://github.com/kpu/kenlm/archive/master.zip
 
