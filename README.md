@@ -1,29 +1,38 @@
 # ASR project barebones
 
 ## Installation guide
-Запустить install.sh: ставит либы, скачивает lm и checkpoint
+Запустить install.sh: ставит либы, скачивает lm и checkpoint. Важно запускать в интерактивном режиме (`bash -i install.sh`), либо можно проделать все действия самостоятельно. Это нужно для того, чтобы успешно активировать conda environment и работать внутри него. После выполнения install.sh выведется две строки для теста (активация conda environment и сам запуск test.py на librispeech test-clean с text_encoder, использующим LM).
 ```shell
 #!/bin/bash
 
 conda_env_name="${1:-dla-env}"
-conda create -n "$conda_env_name" python=3.9
+conda create -y -n "$conda_env_name" python=3.9
 conda activate "$conda_env_name"
-pip install -r requirements.txt
-pip install https://github.com/kpu/kenlm/archive/master.zip
+conda info | grep "active environment"
 
+conda install -y -c conda-forge libsndfile
+pip install --index-url=https://pypi.python.org/simple -r requirements.txt
+pip install https://github.com/kpu/kenlm/archive/master.zip
 
 mkdir external
 mkdir checkpoints
 
-# best checkpoint https://disk.yandex.ru/d/fNwrz8EVluqpDQ
-wget "https://cloud-api.yandex.net/v1/disk/public/resources/download?fNwrz8EVluqpDQ"
-tar xvf 1011_002417-model_best.tar -C checkpoints
-# now you can run `python test.py -r checkpoints/1011_002417/model_best.pth -c hw_asr/configs/ds_testconfig.json`
-
 # LM from mozilla/DeepSpeech
 wget \
+    -nc \
     -O external/deepspeech-0.9.3-models.scorer \
     https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
+
+# best checkpoint https://drive.google.com/file/d/175WxNAUunNb5dKhruk5odU9XG8JQJ98E/view?usp=sharing
+wget \
+    -nc \
+    -O 1011_002417-model_best.tar \
+    "https://drive.google.com/uc?export=download&id=175WxNAUunNb5dKhruk5odU9XG8JQJ98E&confirm=yes"
+tar xvf 1011_002417-model_best.tar -C checkpoints
+
+echo "Now you can run test.py:
+conda activate ${conda_env_name}
+python test.py -r checkpoints/1011_002417/model_best.pth -c hw_asr/configs/ds_testconfig.json"
 
 # [OPTIONAL]
 # sentencepiece model from https://bpemb.h-its.org/en/

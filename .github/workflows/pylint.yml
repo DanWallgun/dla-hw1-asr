@@ -2,9 +2,9 @@ name: Pylint
 
 on:
   push:
-    branches: [main]
+    branches: [hw_asr_2022]
   pull_request:
-    branches: [main]
+    branches: [hw_asr_2022]
 
 jobs:
   build:

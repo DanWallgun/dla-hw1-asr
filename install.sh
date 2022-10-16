@@ -26,6 +26,7 @@ wget \
 tar xvf 1011_002417-model_best.tar -C checkpoints
 
 echo "now you can run test script
+conda activate ${conda_env_name}
 python test.py -r checkpoints/1011_002417/model_best.pth -c hw_asr/configs/ds_testconfig.json"
 
 # [OPTIONAL]
