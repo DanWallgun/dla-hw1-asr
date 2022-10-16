@@ -29,7 +29,7 @@ wget \
     -O 1011_002417-model_best.tar \
     "https://drive.google.com/uc?export=download&id=175WxNAUunNb5dKhruk5odU9XG8JQJ98E&confirm=yes"
 tar xvf 1011_002417-model_best.tar
-mv 1011_002417-model_best default_test_model
+mv 1011_002417 default_test_model
 mv default_test_model/model_best.pth default_test_model/checkpoint.pth
 
 # [OPTIONAL, you don't need it to test the best checkpoint]
