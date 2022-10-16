@@ -34,7 +34,7 @@ class ExternalCTCBPETextEncoder(BaseTextEncoder):
     def encode(self, text) -> Tensor:
         text = self.normalize_text(text)
         try:
-            return Tensor(self.sp.EncodeAsIds(text, enable_sampling=True, nbest_size=-1, alpha=0.1)).unsqueeze(0) + 1
+            return Tensor(self.sp.EncodeAsIds(text, enable_sampling=True, nbest_size=30, alpha=0.1)).unsqueeze(0) + 1
         except KeyError as e:
             raise Exception(
                 f"Can't encode text '{text}''")
