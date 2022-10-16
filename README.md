@@ -1,5 +1,8 @@
 # DLA HW1 ASR project
 
+![unittest](https://github.com/danwallgun/dla-hw1-asr/actions/workflows/unittest.yml/badge.svg)
+![pylint](https://github.com/danwallgun/dla-hw1-asr/actions/workflows/pylint.yml/badge.svg)
+
 ## Installation guide
 Запустить install.sh: ставит либы, скачивает lm и checkpoint. Активация conda environment из bash-скрипта должна пройти гладко, но при неуспехе можно попробовать запустить в интерактивном режиме (`bash -i install.sh`), либо проделать все действия скрипта самостоятельно (он приведён ниже).  
 После выполнения install.sh выведутся команды для запуска test.py (активация conda environment и сам запуск test.py на librispeech test-clean с text_encoder, использующим LM).
