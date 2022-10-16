@@ -65,19 +65,19 @@ def main(config, out_file):
                 argmax = argmax[: int(batch["log_probs_length"][i])]
                 results.append(
                     {
-                        # "ground_truth": batch["text"][i],
-                        "ground_truth": text_encoder.normalize_text(batch["text"][i]),
+                        "ground_truth": batch["text"][i],
+                        "ground_truth_normalized": text_encoder.normalize_text(batch["text"][i]),
                         "pred_text_argmax": text_encoder.ctc_decode(argmax.cpu().numpy()),
                         "pred_text_beam_search": text_encoder.ctc_beam_search(
                             batch["probs"][i], batch["log_probs_length"][i], beam_size=100
                         )[:10],
                     }
                 )
-                wers.append(calc_wer(results[-1]['ground_truth'], results[-1]['pred_text_beam_search'][0].text))
-                cers.append(calc_cer(results[-1]['ground_truth'], results[-1]['pred_text_beam_search'][0].text))
+                wers.append(calc_wer(results[-1]['ground_truth_normalized'], results[-1]['pred_text_beam_search'][0].text))
+                cers.append(calc_cer(results[-1]['ground_truth_normalized'], results[-1]['pred_text_beam_search'][0].text))
 
-    print(f'WER (beam) = {sum(wers) / len(wers)}')
-    print(f'CER (beam) = {sum(cers) / len(cers)}')
+    print(f'WER (beam+lm) = {sum(wers) / len(wers)}')
+    print(f'CER (beam+lm) = {sum(cers) / len(cers)}')
 
     with Path(out_file).open("w") as f:
         json.dump(results, f, indent=2)

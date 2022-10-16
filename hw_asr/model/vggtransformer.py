@@ -151,6 +151,16 @@ class VGGTransformerEncoder(nn.Module):
         return input_lengths
 
 
+class TransformerDecoderLayer(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+
+class VGGTransformerDecoder(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+
 class VGGTransformerModel(BaseModel):
     def __init__(self, n_feats, n_class, **kwargs):
         super().__init__(n_feats, n_class, **kwargs)

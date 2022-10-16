@@ -5,7 +5,7 @@
 < Write your installation guide here >
 
 ```shell
-pip install -r ./requirements.txt
+bash install.sh
 ```
 
 ## Recommended implementation order
