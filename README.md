@@ -56,7 +56,7 @@ if [ "$answer" != "${answer#[Yy]}" ]; then
     # best bpe checkpoint https://drive.google.com/file/d/1N4j62qlWIHey7X4bw1hldOPPQ-9QxQn9/view?usp=sharing
     wget \
         -nc \
-        -O 1011_034317.tar
+        -O 1011_034317.tar \
         "https://drive.google.com/uc?export=download&id=1N4j62qlWIHey7X4bw1hldOPPQ-9QxQn9&confirm=yes"
     tar xvf 1011_034317.tar
     rm 1011_034317.tar
