@@ -57,4 +57,4 @@ python test.py \
 ## Credits
 
 This repository is based on [asr_project_template](https://github.com/WrathOfGrapes/asr_project_template).
-Please make sure to check out its [credits](https://github.com/WrathOfGrapes/asr_project_template/#credits) aswell.
+Please make sure to check out its [credits](https://github.com/WrathOfGrapes/asr_project_template/#credits) as well.
