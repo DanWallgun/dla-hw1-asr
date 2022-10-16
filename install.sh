@@ -2,6 +2,7 @@
 
 conda_env_name="${1:-dla-env}"
 conda create -y -n "$conda_env_name" python=3.9
+eval "$(conda shell.bash hook)"
 conda activate "$conda_env_name"
 conda info | grep "active environment"
 

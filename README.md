@@ -1,13 +1,14 @@
 # DLA HW1 ASR project
 
 ## Installation guide
-Запустить install.sh: ставит либы, скачивает lm и checkpoint. Важно запускать в интерактивном режиме (`bash -i install.sh`), либо можно проделать все действия скрипта самостоятельно (он приведён ниже). Это нужно для того, чтобы успешно активировать conda environment и работать внутри него.  
-После выполнения install.sh выведется две строки для теста (активация conda environment и сам запуск test.py на librispeech test-clean с text_encoder, использующим LM).
+Запустить install.sh: ставит либы, скачивает lm и checkpoint. Активация conda environment из bash-скрипта должна пройти гладко, но при неуспехе можно попробовать запустить в интерактивном режиме (`bash -i install.sh`), либо проделать все действия скрипта самостоятельно (он приведён ниже).  
+После выполнения install.sh выведутся команды для запуска test.py (активация conda environment и сам запуск test.py на librispeech test-clean с text_encoder, использующим LM).
 ```shell
 #!/bin/bash
 
 conda_env_name="${1:-dla-env}"
 conda create -y -n "$conda_env_name" python=3.9
+eval "$(conda shell.bash hook)"
 conda activate "$conda_env_name"
 conda info | grep "active environment"
 
