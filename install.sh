@@ -27,12 +27,6 @@ rm 1011_002417-model_best.tar
 mv 1011_002417 default_test_model
 mv default_test_model/model_best.pth default_test_model/checkpoint.pth
 
-# [OPTIONAL, you don't need it to test the best checkpoint]
-# sentencepiece model from https://bpemb.h-its.org/en/
-# wget \
-#     -O external/en.wiki.bpe.vs1000.model \
-#     https://bpemb.h-its.org/en/en.wiki.bpe.vs1000.model
-
 echo "Now you can run test.py:
 conda activate ${conda_env_name}
 python test.py \
@@ -41,3 +35,33 @@ python test.py \
       -t test_data \
       -o test_result.json \
       -b 5" # default test_data contains 5 samples 
+
+# [OPTIONAL, you don't need it to test the best checkpoint]
+echo "
+Do you want to download BPE ASR model and sentencepiece-model (y/n)?
+WARNING. It's NOT REQUIRED to reproduce the best metrics! This option is only for completeness of report."
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then 
+    # sentencepiece model from https://bpemb.h-its.org/en/
+    wget \
+        -O external/en.wiki.bpe.vs1000.model \
+        https://bpemb.h-its.org/en/en.wiki.bpe.vs1000.model
+    # best bpe checkpoint https://drive.google.com/file/d/1N4j62qlWIHey7X4bw1hldOPPQ-9QxQn9/view?usp=sharing
+    wget \
+        -nc \
+        -O 1011_034317.tar
+        "https://drive.google.com/uc?export=download&id=1N4j62qlWIHey7X4bw1hldOPPQ-9QxQn9&confirm=yes"
+    tar xvf 1011_034317.tar
+    rm 1011_034317.tar
+    mv 1011_034317 bpe_test_model
+    mv bpe_test_model/checkpoint-epoch100.pth bpe_test_model/checkpoint.pth
+
+    echo "Now you can run test.py:
+conda activate ${conda_env_name}
+python test.py \
+      -c bpe_test_config.json \
+      -r bpe_test_model/checkpoint.pth \
+      -t test_data \
+      -o test_result.json \
+      -b 5"
+fi

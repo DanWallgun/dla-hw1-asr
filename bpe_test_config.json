@@ -1,0 +1,23 @@
+{
+  "text_encoder": {
+    "type": "ExternalCTCBPETextEncoder",
+    "args": {
+      "model_file": "external/en.wiki.bpe.vs1000.model",
+      "lm_file": "external/deepspeech-0.9.3-models.scorer"
+    }
+  },
+  "data": {
+    "test": {
+      "batch_size": 256,
+      "num_workers": 8,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "test-clean"
+          }
+        }
+      ]
+    }
+  }
+}
