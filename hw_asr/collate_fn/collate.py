@@ -12,7 +12,6 @@ def collate_fn(dataset_items: List[dict]):
     """
 
     result_batch = {}
-    # [DONE] TODO: your code here
     result_batch['audio'] = torch.nn.utils.rnn.pad_sequence(
         [item['audio'].squeeze(0) for item in dataset_items],
         batch_first=True

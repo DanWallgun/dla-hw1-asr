@@ -150,6 +150,8 @@ class Trainer(BaseTrainer):
         batch["log_probs_length"] = self.model.transform_input_lengths(
             batch["spectrogram_length"]
         )
+        if (batch["log_probs_length"] < batch["text_encoded_length"]).any():
+            print('ENCODED AUDIO IS SHORTER THAN ENCODED TEXT')
         batch["loss"] = self.criterion(**batch)
         if is_train:
             batch["loss"].backward()

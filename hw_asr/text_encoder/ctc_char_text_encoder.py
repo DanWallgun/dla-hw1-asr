@@ -22,7 +22,6 @@ class CTCCharTextEncoder(CharTextEncoder):
         self.char2ind = {v: k for k, v in self.ind2char.items()}
 
     def ctc_decode(self, inds: List[int]) -> str:
-        # [DONE] TODO: your code here
         compressed = [self.ind2char[inds[0]]]
         for ind in inds[1:]:
             char = self.ind2char[ind]
@@ -39,7 +38,6 @@ class CTCCharTextEncoder(CharTextEncoder):
         char_length, voc_size = probs.shape
         assert voc_size == len(self.ind2char)
         hypos: List[Hypothesis] = []
-        # [DONE] TODO: your code here
 
         def extend_and_merge(next_char_probs, src_paths):
             new_paths = defaultdict(float)
@@ -76,7 +74,6 @@ class ExternalCTCCharTextEncoder(CTCCharTextEncoder):
         self.decoder = build_ctcdecoder([''] + list(self.alphabet), kenlm_model_path=lm_file)
 
     def ctc_decode(self, inds: List[int]) -> str:
-        # [DONE] TODO: your code here
         compressed = [self.ind2char[inds[0]]]
         for ind in inds[1:]:
             char = self.ind2char[ind]
@@ -93,7 +90,6 @@ class ExternalCTCCharTextEncoder(CTCCharTextEncoder):
         char_length, voc_size = probs.shape
         assert voc_size == len(self.ind2char)
         hypos: List[Hypothesis] = []
-        # [DONE] TODO: your code here
 
         beams = self.decoder.decode_beams(probs[:probs_length].log().numpy(), beam_size)
         for text, _, _, logit_score, _ in beams:

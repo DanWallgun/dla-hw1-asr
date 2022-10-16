@@ -10,7 +10,6 @@ pip install --index-url=https://pypi.python.org/simple -r requirements.txt
 pip install https://github.com/kpu/kenlm/archive/master.zip
 
 mkdir external
-mkdir checkpoints
 
 # LM from mozilla/DeepSpeech
 wget \
@@ -23,14 +22,19 @@ wget \
     -nc \
     -O 1011_002417-model_best.tar \
     "https://drive.google.com/uc?export=download&id=175WxNAUunNb5dKhruk5odU9XG8JQJ98E&confirm=yes"
-tar xvf 1011_002417-model_best.tar -C checkpoints
+tar xvf 1011_002417-model_best.tar -C default_test_model
+mv default_test_model/model_best.pth default_test_model/checkpoint.pth
 
-echo "now you can run test script
-conda activate ${conda_env_name}
-python test.py -r checkpoints/1011_002417/model_best.pth -c hw_asr/configs/ds_testconfig.json"
-
-# [OPTIONAL]
+# [OPTIONAL, you don't need it to test the best checkpoint]
 # sentencepiece model from https://bpemb.h-its.org/en/
 # wget \
 #     -O external/en.wiki.bpe.vs1000.model \
 #     https://bpemb.h-its.org/en/en.wiki.bpe.vs1000.model
+
+echo "Now you can run test.py:
+conda activate ${conda_env_name}
+python test.py \
+      -c default_test_config.json \
+      -r default_test_model/checkpoint.pth \
+      -t test_data \
+      -o test_result.json"

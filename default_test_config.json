@@ -1,0 +1,22 @@
+{
+  "text_encoder": {
+    "type": "ExternalCTCCharTextEncoder",
+    "args": {
+      "lm_file": "external/deepspeech-0.9.3-models.scorer"
+    }
+  },
+  "data": {
+    "test": {
+      "batch_size": 256,
+      "num_workers": 8,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "test-clean"
+          }
+        }
+      ]
+    }
+  }
+}
