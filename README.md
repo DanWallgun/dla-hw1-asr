@@ -29,6 +29,7 @@ wget \
     -O 1011_002417-model_best.tar \
     "https://drive.google.com/uc?export=download&id=175WxNAUunNb5dKhruk5odU9XG8JQJ98E&confirm=yes"
 tar xvf 1011_002417-model_best.tar
+rm 1011_002417-model_best.tar
 mv 1011_002417 default_test_model
 mv default_test_model/model_best.pth default_test_model/checkpoint.pth
 
