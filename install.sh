@@ -39,4 +39,5 @@ python test.py \
       -c default_test_config.json \
       -r default_test_model/checkpoint.pth \
       -t test_data \
-      -o test_result.json"
+      -o test_result.json \
+      -b 5" # default test_data contains 5 samples 
