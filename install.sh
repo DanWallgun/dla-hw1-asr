@@ -21,7 +21,7 @@ wget \
 wget \
     -nc \
     -O 1011_002417-model_best.tar \
-    "https://drive.google.com/uc?export=download&id=175WxNAUunNb5dKhruk5odU9XG8JQJ98E"
+    "https://drive.google.com/uc?export=download&id=175WxNAUunNb5dKhruk5odU9XG8JQJ98E&confirm=yes"
 tar xvf 1011_002417-model_best.tar -C checkpoints
 
 echo "now you can run test script
