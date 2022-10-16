@@ -1,26 +1,25 @@
+"""
+https://arxiv.org/abs/1904.11660
+implementation inspired by https://github.com/facebookresearch/fairseq
+"""
 import torch
 from torch import nn
 
 from hw_asr.base import BaseModel
 from .deep_speech import length_narrow
 
-
-"""
-https://arxiv.org/abs/1904.11660
-implementation inspired by https://github.com/facebookresearch/fairseq
-"""
-
 DEFAULT_ENC_VGGBLOCK_CONFIG = ((32, 3, 2, 2, False),) * 2
 DEFAULT_ENC_TRANSFORMER_CONFIG = ((256, 4, 1024, True, 0.2, 0.2, 0.2),) * 4
 # 256: embedding dimension
 # 4: number of heads
 # 1024: FFN
-# True: apply layerNorm before (dropout + resiaul) instead of after
+# [NOT USED] True: apply layerNorm before (dropout + resiaul) instead of after
 # 0.2 (dropout): dropout after MultiheadAttention and second FC
 # 0.2 (attention_dropout): dropout in MultiheadAttention
 # 0.2 (relu_dropout): dropout after ReLu
-DEFAULT_DEC_TRANSFORMER_CONFIG = ((256, 2, 1024, True, 0.2, 0.2, 0.2),) * 2
-DEFAULT_DEC_CONV_CONFIG = ((256, 3, True),) * 2
+
+# DEFAULT_DEC_TRANSFORMER_CONFIG = ((256, 2, 1024, True, 0.2, 0.2, 0.2),) * 2
+# DEFAULT_DEC_CONV_CONFIG = ((256, 3, True),) * 2
 
 
 class VGGBlock(nn.Module):
