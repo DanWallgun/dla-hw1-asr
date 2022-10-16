@@ -43,7 +43,7 @@ python test.py \
       -b 5" # default test_data contains 5 samples 
 ```
 Опциональная часть скрипта про загрузку моделей, относящихся к BPE 
-```
+```shell
 echo "
 Do you want to download BPE ASR model and sentencepiece-model (y/n)?
 WARNING. It's NOT REQUIRED to reproduce the best metrics! This option is only for completeness of report."
